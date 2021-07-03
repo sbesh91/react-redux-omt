@@ -1,0 +1,17 @@
+{
+  "presets": [["@babel/preset-typescript"]],
+  "env": {
+    "production": {
+      "presets": ["minify"]
+    }
+  },
+  "plugins": [
+    "@babel/plugin-transform-react-jsx-source",
+    [
+      "@babel/plugin-transform-react-jsx",
+      {
+        "useBuiltIns": true
+      }
+    ]
+  ]
+}
