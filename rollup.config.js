@@ -17,7 +17,9 @@ export default {
     format: "amd",
   },
   plugins: [
-    nodeResolve(),
+    nodeResolve({
+      preferBuiltins: false,
+    }),
     commonjs({
       namedExports: {
         react: [
