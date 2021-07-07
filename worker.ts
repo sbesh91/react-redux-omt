@@ -1,13 +1,21 @@
 import { createStore } from "redux";
-import { expose } from "comlink";
+import { expose, transfer } from "comlink";
 import { enablePatches, Patch, produceWithPatches } from "immer";
 import BufferBackedObject, {
   ArrayOfBufferBackedObjects,
   Descriptor,
-} from "buffer-backed-object";
+} from "buffer-backed-object/buffer-backed-object";
 
 enablePatches();
 
+const schema = {
+  value: BufferBackedObject.NestedBufferBackedObject({
+    value: BufferBackedObject.UTF8String(256),
+  }),
+  path: BufferBackedObject.UTF8String(256),
+  op: BufferBackedObject.UTF8String(16),
+  // test: BufferBackedObject.Uint8(),
+};
 interface Store {
   [key: string]: {
     value: string;
@@ -20,7 +28,6 @@ interface Action {
 
 let init: Store = {};
 let patches: Patch[];
-let arrayBuffer: any;
 
 function uuidv4() {
   return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
@@ -109,18 +116,6 @@ const reducer = (state = init, action: Action) => {
   const [next, nextPatches] = reduce(state, action);
   patches = nextPatches;
 
-  // calculate the buffer size, op, and value
-  // const buffer = new ArrayBuffer(200);
-  // const dataView = new ArrayOfBufferBackedObjects(buffer, {
-  //   op: BufferBackedObject.UTF8String(64),
-  //   path: stringArrayBuffer(),
-  //   value: BufferBackedObject.UTF8String(64),
-  // });
-
-  // dataView.push(...(patches as any));
-
-  // console.log(JSON.stringify(dataView, null, 2));
-
   return next;
 };
 
@@ -130,7 +125,17 @@ function getPatches() {
 }
 
 function getBuffer() {
-  return arrayBuffer;
+  const buffer = new ArrayBuffer(1024);
+  const dataView = new ArrayOfBufferBackedObjects(buffer, schema);
+
+  patches.forEach(({ op, path, value }, i) => {
+    // dataView[i].test = 12;
+    dataView[i].op = op;
+    dataView[i].path = path.join(",");
+    dataView[i].value.value = value.value;
+  });
+
+  return transfer(buffer, [buffer]);
 }
 
 //expose general fetch handler in here

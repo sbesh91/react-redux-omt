@@ -25,10 +25,10 @@ const CounterDemo = () => {
   const store = useSelector((state) => state) as any;
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      dispatch({ type: "INCREMENT" });
-    }, 8);
-    return () => clearInterval(interval);
+    // const interval = setInterval(() => {
+    //   dispatch({ type: "INCREMENT" });
+    // }, 8);
+    // return () => clearInterval(interval);
   }, []);
 
   return (
