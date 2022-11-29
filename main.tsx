@@ -1,32 +1,28 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { render } from "react-dom";
 
-import { Provider, useDispatch, useSelector } from "react-redux";
-
 import { wrap } from "comlink";
+import { Selector, SelectorReturn, WorkerStore } from "./basic-worker";
+import { Signal, useSignal, useSignalEffect } from "@preact/signals-react";
+const worker = new Worker("./basic-worker.ts", { type: "module" });
+const remoteStore = wrap<WorkerStore>(worker);
 
-import remoteStoreWrapper from "./remote-store-wrapper.js";
-
-const remoteStore = wrap(new Worker("./worker.ts", { type: "module" }));
-
-async function run() {
-  const store = await remoteStoreWrapper(remoteStore);
-
-  render(
-    <Provider store={store}>
-      <CounterDemo />
-    </Provider>,
-    document.getElementById("root")
-  );
+function run() {
+  render(<CounterDemo />, document.getElementById("root"));
 }
 
 const CounterDemo = () => {
-  const dispatch = useDispatch();
-  const store = useSelector((state) => state) as any;
+  const one = useStore({ selector: "one" });
+  const two = useStore({
+    selector: "two",
+    params: {
+      hello: "world",
+    },
+  });
 
   useEffect(() => {
     // const interval = setInterval(() => {
-    //   dispatch({ type: "INCREMENT" });
+    //   remoteStore.dispatch({ type: "INCREMENT" });
     // }, 8);
     // return () => clearInterval(interval);
   }, []);
@@ -34,11 +30,55 @@ const CounterDemo = () => {
   return (
     <div>
       <h1>Welcome</h1>
-      <p>The current counter is: {Object.entries(store).length}</p>
-      <button onClick={() => dispatch({ type: "INCREMENT" })}>+</button>
-      <button onClick={() => dispatch({ type: "DECREMENT" })}>-</button>
+      <p>The current counter is: {one}</p>
+      <p>A modification of that value is: {two}</p>
+      <button onClick={() => remoteStore.dispatch({ type: "INCREMENT" })}>
+        +
+      </button>
+      <button onClick={() => remoteStore.dispatch({ type: "DECREMENT" })}>
+        -
+      </button>
     </div>
   );
 };
+
+const lastMessage = new Signal<SelectorReturn | null>(null);
+worker.addEventListener("message", ({ data }) => {
+  lastMessage.value = data;
+});
+
+function useStore<T>(selector: Selector) {
+  const currentId = useSignal("");
+  const [state, setState] = useState<T | null>(null);
+
+  useSignalEffect(() => {
+    const uuid = currentId.peek();
+    const data = lastMessage.value;
+    if (data?.uuid === uuid) {
+      setState(data.value as T);
+    }
+  });
+
+  useEffect(() => {
+    const uuid = uuidv4();
+    currentId.value = uuid;
+    remoteStore.subscribe(selector, uuid);
+
+    return () => {
+      remoteStore.unsubscribe(uuid);
+    };
+  }, []);
+
+  return state;
+}
+
+function uuidv4() {
+  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+    (
+      c ^
+      (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+    ).toString(16)
+  );
+}
 
 run();
