@@ -1,5 +1,5 @@
 import { useSignal } from "@preact/signals-react";
-import { useState, useEffect, createContext, useContext } from "react";
+import { useEffect, createContext, useContext } from "react";
 import { Action } from "redux";
 
 interface StoreProviderProps {

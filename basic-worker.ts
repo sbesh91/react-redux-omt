@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import produce from "immer";
 import { Action, createStore } from "redux";
-import { ActionTypes } from "./types";
+import { ActionTypes, MessageType, Selector } from "./types";
 interface StoreState {
   counter: number;
 }
@@ -30,14 +30,6 @@ const reducer = (state = init, action: Action<ActionTypes>) => {
 const store = createStore(reducer);
 
 const listeners = new Map<string, Selector>();
-
-export type MessageType =
-  | {
-      type: "dispatch";
-      action: Action<ActionTypes>;
-    }
-  | { type: "subscribe"; selector: Selector; uuid: string }
-  | { type: "unsubscribe"; uuid: string };
 
 addEventListener("message", ({ data }: MessageEvent<MessageType>) => {
   switch (data.type) {
@@ -76,18 +68,6 @@ function runSelector(value: Selector, key: string) {
     });
   }
 }
-
-export type Selector =
-  | { selector: "one" }
-  | {
-      selector: "two";
-      params: { hello: string };
-    };
-
-export type SelectorReturn = {
-  uuid: string;
-  value: unknown;
-};
 
 function one() {
   return store.getState().counter;
