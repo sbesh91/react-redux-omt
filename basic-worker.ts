@@ -1,62 +1,57 @@
-import { expose } from "comlink";
-import { enablePatches, produceWithPatches } from "immer";
-import { Action, createStore, Store } from "redux";
-
-enablePatches();
-
-let init: Store = {};
-
-function uuidv4() {
-  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-    (
-      c ^
-      (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
-    ).toString(16)
-  );
+import { configureStore } from "@reduxjs/toolkit";
+import produce from "immer";
+import { Action, createStore } from "redux";
+import { ActionTypes } from "./types";
+interface StoreState {
+  counter: number;
 }
 
-const reduce = produceWithPatches((draft: Store, action: Action) => {
-  const key = uuidv4();
+let init: StoreState = {
+  counter: 0,
+};
 
+const reduce = produce((draft: StoreState, action: Action<ActionTypes>) => {
   switch (action.type) {
     case "INCREMENT":
-      draft[key] = {
-        value: `${key}-increment`,
-      };
+      draft.counter++;
       break;
     case "DECREMENT":
-      draft[key] = {
-        value: `${key}-decrement`,
-      };
+      draft.counter--;
       break;
   }
 });
 
-const reducer = (state = init, action: Action) => {
-  const [next, nextPatches] = reduce(state, action);
+const reducer = (state = init, action: Action<ActionTypes>) => {
+  const next = reduce(state, action);
 
   return next;
 };
 
 const store = createStore(reducer);
 
-export interface WorkerStore {
-  dispatch: Store["dispatch"];
-  subscribe: (selector: Selector, uuid: string) => void;
-  unsubscribe: (uuid: string) => void;
-}
-
 const listeners = new Map<string, Selector>();
 
-expose({
-  dispatch: store.dispatch,
-  subscribe: (selector: Selector, uuid: string) => {
-    listeners.set(uuid, selector);
-    runSelector(selector, uuid);
-  },
-  unsubscribe: (uuid: string) => {
-    listeners.delete(uuid);
-  },
+export type MessageType =
+  | {
+      type: "dispatch";
+      action: Action<ActionTypes>;
+    }
+  | { type: "subscribe"; selector: Selector; uuid: string }
+  | { type: "unsubscribe"; uuid: string };
+
+addEventListener("message", ({ data }: MessageEvent<MessageType>) => {
+  switch (data.type) {
+    case "dispatch":
+      store.dispatch(data.action);
+      break;
+    case "subscribe":
+      listeners.set(data.uuid, data.selector);
+      runSelector(data.selector, data.uuid);
+      break;
+    case "unsubscribe":
+      listeners.delete(data.uuid);
+      break;
+  }
 });
 
 store.subscribe(() => {
@@ -95,7 +90,7 @@ export type SelectorReturn = {
 };
 
 function one() {
-  return Object.entries(store.getState()).length;
+  return store.getState().counter;
 }
 
 function two(params: { hello: string }) {

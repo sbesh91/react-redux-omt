@@ -15,8 +15,10 @@ module.exports = {
     dir: "dist",
     format: "amd",
   },
+  context: "globalThis",
   plugins: [
     nodeResolve({
+      extensions,
       preferBuiltins: false,
       browser: true,
     }),
