@@ -1,6 +1,6 @@
 import { Action } from "@reduxjs/toolkit";
 
-export enum ActionTypes {
+export const enum ActionTypes {
   increment = "INCREMENT",
   decrement = "DECREMENT",
 }

@@ -1,6 +1,7 @@
 import { useSignal } from "@preact/signals-react";
 import { useEffect, createContext, useContext } from "react";
 import { Action } from "redux";
+import { ActionTypes, Selector } from "./types";
 
 interface StoreProviderProps {
   worker: Worker;
@@ -15,12 +16,12 @@ export function useStoreProvider() {
 export function useDispatch() {
   const { worker } = useStoreProvider();
 
-  return (action: Action) => {
+  return (action: Action<ActionTypes>) => {
     worker.postMessage({ type: "dispatch", action });
   };
 }
 
-export function useWorkerStore<T>(selector: any) {
+export function useWorkerStore<T>(selector: Selector) {
   const { worker } = useStoreProvider();
   const state = useSignal<T | null>(null);
 

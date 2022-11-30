@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { render } from "react-dom";
+import { ActionTypes } from "./types";
 import { StoreProvider, useDispatch, useWorkerStore } from "./use-store";
 
 const worker = new Worker("./basic-worker.ts", { type: "module" });
@@ -25,7 +26,7 @@ const CounterDemo = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      dispatch({ type: "INCREMENT" });
+      dispatch({ type: ActionTypes.increment });
     }, 1);
     return () => clearInterval(interval);
   }, []);
@@ -35,8 +36,12 @@ const CounterDemo = () => {
       <h1>Welcome</h1>
       <p>The current counter is: {one}</p>
       <p>A modification of that value is: {two}</p>
-      <button onClick={() => dispatch({ type: "INCREMENT" })}>+</button>
-      <button onClick={() => dispatch({ type: "DECREMENT" })}>-</button>
+      <button onClick={() => dispatch({ type: ActionTypes.increment })}>
+        +
+      </button>
+      <button onClick={() => dispatch({ type: ActionTypes.decrement })}>
+        -
+      </button>
     </div>
   );
 };
