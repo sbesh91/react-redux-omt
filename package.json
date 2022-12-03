@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -c -w -m",
-    "serve": "http-server -c0 dist"
+    "serve": "statikk --port 8080 --coi dist"
   },
   "keywords": [],
   "initial-author": "Surma <surma@surma.link>",
@@ -36,10 +36,9 @@
     "reselect": "^4.1.7",
     "rollup": "^3.5.0",
     "rollup-plugin-replace": "^2.2.0",
+    "statikk": "^2.2.0",
     "use-deep-compare-effect": "^1.8.1",
     "uuid": "^8.3.2"
   },
-  "devDependencies": {
-    "http-server": "^0.11.1"
-  }
+  "devDependencies": {}
 }

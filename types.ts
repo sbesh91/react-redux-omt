@@ -7,6 +7,7 @@ export const enum ActionTypes {
 }
 
 export type MessageType =
+  | { type: "init"; sab: SharedArrayBuffer }
   | {
       type: "dispatch";
       action: Action<ActionTypes>;

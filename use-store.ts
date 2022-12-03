@@ -4,6 +4,10 @@ import useDeepCompareEffect from "use-deep-compare-effect";
 import { ActionTypes, BaseSelector, SelectorReturn } from "./types";
 
 export const worker = new Worker("./basic-worker.ts", { type: "module" });
+const sab = new SharedArrayBuffer(32);
+const hasChanged = new Int32Array(sab, 0, 4);
+
+worker.postMessage({ type: "init", sab });
 
 export function dispatch(action: Action<ActionTypes>) {
   worker.postMessage({ type: "dispatch", action });
@@ -39,6 +43,11 @@ export function useWorkerStore<T>(
       uuid,
       selector: { selector, params },
     });
+
+    // console.log("notify");
+    // hasChanged[0] = 1;
+    // Atomics.notify(hasChanged, 0);
+
     return () => {
       worker.postMessage({ type: "unsubscribe", uuid });
     };

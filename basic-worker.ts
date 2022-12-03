@@ -28,12 +28,29 @@ const store = createStore(reducer);
 
 const listeners = new Map<string, BaseSelector>();
 
+let buffer: SharedArrayBuffer;
+
 addEventListener("message", ({ data }: MessageEvent<MessageType>) => {
   switch (data.type) {
+    case "init": {
+      buffer = data.sab;
+      break;
+    }
     case "dispatch":
       store.dispatch(data.action);
       break;
     case "subscribe":
+      // while (true) {
+      //   if (!buffer) {
+      //     break;
+      //   }
+      //   console.log("wait");
+      //   const hasChanged = new Int32Array(buffer, 0, 4);
+      //   Atomics.wait(hasChanged, 0, 0);
+      //   hasChanged[0] = 0;
+      //   console.log("notified");
+      //   break;
+      // }
       listeners.set(data.uuid, data.selector);
       runSelector(data.selector, data.uuid);
       break;
