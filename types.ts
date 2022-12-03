@@ -1,4 +1,5 @@
 import { Action } from "@reduxjs/toolkit";
+import { selectors } from "./selectors";
 
 export const enum ActionTypes {
   increment = "INCREMENT",
@@ -10,19 +11,19 @@ export type MessageType =
       type: "dispatch";
       action: Action<ActionTypes>;
     }
-  | { type: "subscribe"; selector: Selector; uuid: string }
+  | { type: "subscribe"; selector: BaseSelector; uuid: string }
   | { type: "unsubscribe"; uuid: string };
 
-export type Selector =
-  | { selector: "one" }
-  | {
-      selector: "two";
-      params: { hello: string };
-    }
-  | { selector: "three" }
-  | { selector: "four" };
+export type BaseSelector = {
+  selector: keyof typeof selectors;
+  params: ReadonlyArray<unknown>;
+};
 
 export type SelectorReturn<T> = {
   uuid: string;
   value: T;
 };
+
+export interface StoreState {
+  counter: number;
+}

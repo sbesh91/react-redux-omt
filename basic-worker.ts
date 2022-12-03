@@ -1,11 +1,7 @@
 import produce from "immer";
-import createCachedSelector, { LruMapCache } from "re-reselect";
 import { Action, createStore } from "redux";
-import { createSelector } from "reselect";
-import { ActionTypes, MessageType, Selector } from "./types";
-interface StoreState {
-  counter: number;
-}
+import { selectors } from "./selectors";
+import { ActionTypes, BaseSelector, MessageType, StoreState } from "./types";
 
 let init: StoreState = {
   counter: 0,
@@ -30,7 +26,7 @@ const reducer = (state = init, action: Action<ActionTypes>) => {
 
 const store = createStore(reducer);
 
-const listeners = new Map<string, Selector>();
+const listeners = new Map<string, BaseSelector>();
 
 addEventListener("message", ({ data }: MessageEvent<MessageType>) => {
   switch (data.type) {
@@ -51,56 +47,16 @@ store.subscribe(() => {
   listeners.forEach(runSelector);
 });
 
-function runSelector(value: Selector, key: string) {
-  let returnValue;
-  switch (value.selector) {
-    case "one":
-      returnValue = one();
-      break;
-    case "two":
-      returnValue = two(value.params);
-      break;
-    case "three":
-      returnValue = three(store.getState());
-      break;
-    case "four":
-      returnValue = four(store.getState(), three(store.getState()));
-  }
+function runSelector(value: BaseSelector, key: string) {
+  const selector = selectors[value.selector];
+  const params = value.params ?? [];
+  const returnValue: ReturnType<typeof selector> = selector.apply(null, [
+    store.getState(),
+    ...params,
+  ]);
 
-  if (returnValue !== undefined) {
-    postMessage({
-      uuid: key,
-      value: returnValue,
-    });
-  }
+  postMessage({
+    uuid: key,
+    value: returnValue,
+  });
 }
-
-function cacheByValue<T>(_: StoreState, val: T) {
-  return "" + val || "";
-}
-
-function one() {
-  return store.getState().counter;
-}
-
-function two(params: { hello: string }) {
-  return `${params.hello} ${one() / 2}`;
-}
-
-const three = createSelector(
-  (state: StoreState) => state,
-  (state) => {
-    return state.counter * 2;
-  }
-);
-
-const four = createCachedSelector(
-  (state: StoreState) => state,
-  (_, val: number) => val,
-  (_, val) => {
-    return val * 3;
-  }
-)({
-  keySelector: cacheByValue,
-  cacheObject: new LruMapCache({ cacheSize: 5 }),
-});

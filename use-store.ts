@@ -1,7 +1,8 @@
 import { Signal, useSignal, useSignalEffect } from "@preact/signals-react";
-import { useEffect, createContext, useContext } from "react";
+import { useEffect, createContext, useContext, useMemo } from "react";
 import { Action } from "redux";
-import { ActionTypes, Selector, SelectorReturn } from "./types";
+import useDeepCompareEffect from "use-deep-compare-effect";
+import { ActionTypes, BaseSelector, SelectorReturn } from "./types";
 
 export const worker = new Worker("./basic-worker.ts", { type: "module" });
 interface StoreProviderProps {
@@ -29,26 +30,32 @@ worker.addEventListener(
   }
 );
 
-export function useWorkerStore<T>(selector: Selector) {
+export function useWorkerStore<T>(
+  selector: BaseSelector["selector"],
+  ...params: BaseSelector["params"]
+) {
   const currentUuid = useSignal("");
   const state = useSignal<T | null>(null);
 
   useSignalEffect(() => {
     const data = workerEvent.value;
-    if (data?.uuid === currentUuid.peek()) {
+    if (data && data.uuid === currentUuid.peek()) {
       state.value = data.value as T;
     }
   });
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     const uuid = uuidv4();
     currentUuid.value = uuid;
-    worker.postMessage({ type: "subscribe", uuid, selector });
-
+    worker.postMessage({
+      type: "subscribe",
+      uuid,
+      selector: { selector, params },
+    });
     return () => {
       worker.postMessage({ type: "unsubscribe", uuid });
     };
-  }, []);
+  }, [selector, params]);
 
   return state;
 }

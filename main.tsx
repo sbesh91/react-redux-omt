@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import { useSignalEffect } from "@preact/signals-react";
+import React, { useEffect, useState } from "react";
 import { render } from "react-dom";
 import { ActionTypes } from "./types";
 import {
@@ -19,21 +20,21 @@ function run() {
 
 const CounterDemo = () => {
   const dispatch = useDispatch();
-  const one = useWorkerStore<number>({ selector: "one" });
-  const three = useWorkerStore<number>({ selector: "three" });
-  const four = useWorkerStore<number>({ selector: "four" });
-  const two = useWorkerStore<number>({
-    selector: "two",
-    params: {
-      hello: "world",
-    },
+  const [current, setCurrent] = useState<number>(0);
+  const one = useWorkerStore<number>("one");
+  const two = useWorkerStore<number>("two", "hello");
+  const three = useWorkerStore<number>("three");
+  const four = useWorkerStore<number>("four", current);
+
+  useSignalEffect(() => {
+    setCurrent(one.value ?? 0);
   });
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      dispatch({ type: ActionTypes.increment });
-    }, 1);
-    return () => clearInterval(interval);
+    // const interval = setInterval(() => {
+    //   dispatch({ type: ActionTypes.increment });
+    // }, 1);
+    // return () => clearInterval(interval);
   }, []);
 
   return (
