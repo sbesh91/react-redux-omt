@@ -17,6 +17,8 @@ function run() {
 const CounterDemo = () => {
   const dispatch = useDispatch();
   const one = useWorkerStore<number>({ selector: "one" });
+  const three = useWorkerStore<number>({ selector: "three" });
+  const four = useWorkerStore<number>({ selector: "four" });
   const two = useWorkerStore<number>({
     selector: "two",
     params: {
@@ -36,6 +38,8 @@ const CounterDemo = () => {
       <h1>Welcome</h1>
       <p>The current counter is: {one}</p>
       <p>A modification of that value is: {two}</p>
+      <p>What about a different modification: {three}</p>
+      <p>Here's yet another different modification: {four}</p>
       <button onClick={() => dispatch({ type: ActionTypes.increment })}>
         +
       </button>

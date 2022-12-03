@@ -18,7 +18,9 @@ export type Selector =
   | {
       selector: "two";
       params: { hello: string };
-    };
+    }
+  | { selector: "three" }
+  | { selector: "four" };
 
 export type SelectorReturn = {
   uuid: string;

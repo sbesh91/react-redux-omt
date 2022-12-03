@@ -1,6 +1,7 @@
-import { configureStore } from "@reduxjs/toolkit";
 import produce from "immer";
+import createCachedSelector, { LruMapCache } from "re-reselect";
 import { Action, createStore } from "redux";
+import { createSelector } from "reselect";
 import { ActionTypes, MessageType, Selector } from "./types";
 interface StoreState {
   counter: number;
@@ -59,6 +60,11 @@ function runSelector(value: Selector, key: string) {
     case "two":
       returnValue = two(value.params);
       break;
+    case "three":
+      returnValue = three(store.getState());
+      break;
+    case "four":
+      returnValue = four(store.getState(), three(store.getState()));
   }
 
   if (returnValue !== undefined) {
@@ -69,6 +75,10 @@ function runSelector(value: Selector, key: string) {
   }
 }
 
+function cacheByValue<T>(_: StoreState, val: T) {
+  return "" + val || "";
+}
+
 function one() {
   return store.getState().counter;
 }
@@ -76,3 +86,21 @@ function one() {
 function two(params: { hello: string }) {
   return `${params.hello} ${one() / 2}`;
 }
+
+const three = createSelector(
+  (state: StoreState) => state,
+  (state) => {
+    return state.counter * 2;
+  }
+);
+
+const four = createCachedSelector(
+  (state: StoreState) => state,
+  (_, val: number) => val,
+  (_, val) => {
+    return val * 3;
+  }
+)({
+  keySelector: cacheByValue,
+  cacheObject: new LruMapCache({ cacheSize: 5 }),
+});
