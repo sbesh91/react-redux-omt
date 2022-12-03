@@ -1,25 +1,12 @@
 import { Signal, useSignal, useSignalEffect } from "@preact/signals-react";
-import { useEffect, createContext, useContext, useMemo } from "react";
 import { Action } from "redux";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import { ActionTypes, BaseSelector, SelectorReturn } from "./types";
 
 export const worker = new Worker("./basic-worker.ts", { type: "module" });
-interface StoreProviderProps {
-  worker: Worker;
-}
-export const StoreProvider = createContext<StoreProviderProps>({
-  worker: <Worker>{},
-});
 
-export function useStoreProvider() {
-  return useContext(StoreProvider);
-}
-
-export function useDispatch() {
-  return (action: Action<ActionTypes>) => {
-    worker.postMessage({ type: "dispatch", action });
-  };
+export function dispatch(action: Action<ActionTypes>) {
+  worker.postMessage({ type: "dispatch", action });
 }
 
 const workerEvent = new Signal<SelectorReturn<unknown> | null>(null);

@@ -1,6 +1,6 @@
 import produce from "immer";
 import { Action, createStore } from "redux";
-import { selectors } from "./selectors";
+import { allSelectors, selectors } from "./selectors";
 import { ActionTypes, BaseSelector, MessageType, StoreState } from "./types";
 
 let init: StoreState = {

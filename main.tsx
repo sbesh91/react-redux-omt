@@ -2,24 +2,13 @@ import { useSignalEffect } from "@preact/signals-react";
 import React, { useEffect, useState } from "react";
 import { render } from "react-dom";
 import { ActionTypes } from "./types";
-import {
-  StoreProvider,
-  useDispatch,
-  useWorkerStore,
-  worker,
-} from "./use-store";
+import { dispatch, useWorkerStore } from "./use-store";
 
 function run() {
-  render(
-    <StoreProvider.Provider value={{ worker }}>
-      <CounterDemo />
-    </StoreProvider.Provider>,
-    document.getElementById("root")
-  );
+  render(<CounterDemo />, document.getElementById("root"));
 }
 
 const CounterDemo = () => {
-  const dispatch = useDispatch();
   const [current, setCurrent] = useState<number>(0);
   const one = useWorkerStore<number>("one");
   const two = useWorkerStore<number>("two", "hello");
