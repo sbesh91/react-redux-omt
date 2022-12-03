@@ -1,9 +1,12 @@
 import React, { useEffect } from "react";
 import { render } from "react-dom";
 import { ActionTypes } from "./types";
-import { StoreProvider, useDispatch, useWorkerStore } from "./use-store";
-
-const worker = new Worker("./basic-worker.ts", { type: "module" });
+import {
+  StoreProvider,
+  useDispatch,
+  useWorkerStore,
+  worker,
+} from "./use-store";
 
 function run() {
   render(

@@ -22,7 +22,7 @@ export type Selector =
   | { selector: "three" }
   | { selector: "four" };
 
-export type SelectorReturn = {
+export type SelectorReturn<T> = {
   uuid: string;
-  value: unknown;
+  value: T;
 };
