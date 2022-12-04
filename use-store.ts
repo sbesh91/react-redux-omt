@@ -1,7 +1,7 @@
 import { Signal, useSignal, useSignalEffect } from "@preact/signals-react";
 import { Action } from "redux";
 import useDeepCompareEffect from "use-deep-compare-effect";
-import { ActionTypes, BaseSelector, SelectorReturn } from "./types";
+import { BaseSelector, SelectorReturn } from "./types";
 
 export const worker = new Worker("./basic-worker.ts", { type: "module" });
 const sab = new SharedArrayBuffer(32);
@@ -9,7 +9,7 @@ const hasChanged = new Int32Array(sab, 0, 4);
 
 worker.postMessage({ type: "init", sab });
 
-export function dispatch(action: Action<ActionTypes>) {
+export function dispatch(action: Action) {
   worker.postMessage({ type: "dispatch", action });
 }
 

@@ -1,30 +1,24 @@
-import produce from "immer";
-import { Action, createStore } from "redux";
-import { allSelectors, selectors } from "./selectors";
-import { ActionTypes, BaseSelector, MessageType, StoreState } from "./types";
+import { configureStore } from "@reduxjs/toolkit";
+import { Action } from "redux";
+import { counterReducer } from "./actions";
+import { selectors } from "./selectors";
+import { BaseSelector, MessageType, StoreState } from "./types";
 
 let init: StoreState = {
   counter: 0,
 };
 
-const reduce = produce((draft: StoreState, action: Action<ActionTypes>) => {
-  switch (action.type) {
-    case "INCREMENT":
-      draft.counter++;
-      break;
-    case "DECREMENT":
-      draft.counter--;
-      break;
-  }
-});
+const _counterReducer = counterReducer(init);
 
-const reducer = (state = init, action: Action<ActionTypes>) => {
-  const next = reduce(state, action);
+const reducer = (state = init, action: Action) => {
+  const next = _counterReducer(state, action);
 
   return next;
 };
 
-const store = createStore(reducer);
+const store = configureStore({
+  reducer,
+});
 
 const listeners = new Map<string, BaseSelector>();
 

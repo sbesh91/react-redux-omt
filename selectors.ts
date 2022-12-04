@@ -1,5 +1,5 @@
+import { createSelector } from "@reduxjs/toolkit";
 import createCachedSelector, { LruMapCache } from "re-reselect";
-import { createSelector } from "reselect";
 import { StoreState } from "./types";
 
 function cacheByValue<T>(_: StoreState, val: T) {

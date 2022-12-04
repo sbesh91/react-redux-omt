@@ -1,16 +1,11 @@
 import { Action } from "@reduxjs/toolkit";
 import { selectors } from "./selectors";
 
-export const enum ActionTypes {
-  increment = "INCREMENT",
-  decrement = "DECREMENT",
-}
-
 export type MessageType =
   | { type: "init"; sab: SharedArrayBuffer }
   | {
       type: "dispatch";
-      action: Action<ActionTypes>;
+      action: Action;
     }
   | { type: "subscribe"; selector: BaseSelector; uuid: string }
   | { type: "unsubscribe"; uuid: string };
