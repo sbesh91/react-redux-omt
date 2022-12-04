@@ -1,30 +1,30 @@
 import { createSelector } from "@reduxjs/toolkit";
 import createCachedSelector, { LruMapCache } from "re-reselect";
-import { StoreState } from "./types";
+import { RootState } from "./types";
 
-function cacheByValue<T>(_: StoreState, val: T) {
+function cacheByValue<T>(_: RootState, val: T) {
   return "" + val || "";
 }
 
-function one(state: StoreState) {
-  return state.counter;
+function one(state: RootState) {
+  return state.counterSliceReducer.counter;
 }
 
-function two(state: StoreState, hello: string) {
+function two(state: RootState, hello: string) {
   return `${hello} ${one(state) / 2}`;
 }
 
 const three = createSelector(
-  (state: StoreState) => state,
+  (state: RootState) => state,
   (state) => {
-    return state.counter * 2;
+    return state.counterSliceReducer.counter * 2;
   }
 );
 
 const four = createCachedSelector(
-  (state: StoreState) => state,
+  (state: RootState) => state,
   (_, val: number) => val,
-  (state: StoreState) => three(state),
+  (state: RootState) => three(state),
   (_, __, res) => {
     return res * 3;
   }

@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { render } from "react-dom";
+import { decrement, increment } from "./actions";
 import { dispatch, useWorkerStore } from "./use-store";
 
 function run() {
@@ -14,7 +15,7 @@ const CounterDemo = () => {
 
   useEffect(() => {
     // const interval = setInterval(() => {
-    //   dispatch({ type: ActionTypes.increment });
+    //   dispatch(increment(2));
     // }, 1);
     // return () => clearInterval(interval);
   }, []);
@@ -26,8 +27,8 @@ const CounterDemo = () => {
       <p>A modification of that value is: {two}</p>
       <p>What about a different modification: {three}</p>
       <p>Here's yet another different modification: {four}</p>
-      <button onClick={() => dispatch({ type: "increment" })}>+</button>
-      <button onClick={() => dispatch({ type: "decrement" })}>-</button>
+      <button onClick={() => dispatch(increment(2))}>+</button>
+      <button onClick={() => dispatch(decrement(2))}>-</button>
     </div>
   );
 };

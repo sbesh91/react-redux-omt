@@ -1,8 +1,7 @@
-import { Action } from "@reduxjs/toolkit";
+import { Action, CombinedState } from "@reduxjs/toolkit";
 import { selectors } from "./selectors";
 
 export type MessageType =
-  | { type: "init"; sab: SharedArrayBuffer }
   | {
       type: "dispatch";
       action: Action;
@@ -14,6 +13,10 @@ export type BaseSelector = {
   selector: keyof typeof selectors;
   params: ReadonlyArray<unknown>;
 };
+
+export type RootState = CombinedState<{
+  counterSliceReducer: StoreState;
+}>;
 
 export type SelectorReturn<T> = {
   uuid: string;

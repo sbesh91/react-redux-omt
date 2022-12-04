@@ -1,17 +1,19 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { Action } from "redux";
-import { counterReducer } from "./actions";
+import { Action, combineReducers } from "redux";
+import { counterSliceReducer, counterStoreState } from "./actions";
 import { selectors } from "./selectors";
-import { BaseSelector, MessageType, StoreState } from "./types";
+import { BaseSelector, MessageType, RootState } from "./types";
 
-let init: StoreState = {
-  counter: 0,
+const rootReducer = combineReducers({
+  counterSliceReducer,
+});
+
+const init: RootState = {
+  counterSliceReducer: counterStoreState,
 };
 
-const _counterReducer = counterReducer(init);
-
-const reducer = (state = init, action: Action) => {
-  const next = _counterReducer(state, action);
+const reducer = (state: RootState = init, action: Action) => {
+  const next = rootReducer(state, action);
 
   return next;
 };
@@ -22,29 +24,12 @@ const store = configureStore({
 
 const listeners = new Map<string, BaseSelector>();
 
-let buffer: SharedArrayBuffer;
-
 addEventListener("message", ({ data }: MessageEvent<MessageType>) => {
   switch (data.type) {
-    case "init": {
-      buffer = data.sab;
-      break;
-    }
     case "dispatch":
       store.dispatch(data.action);
       break;
     case "subscribe":
-      // while (true) {
-      //   if (!buffer) {
-      //     break;
-      //   }
-      //   console.log("wait");
-      //   const hasChanged = new Int32Array(buffer, 0, 4);
-      //   Atomics.wait(hasChanged, 0, 0);
-      //   hasChanged[0] = 0;
-      //   console.log("notified");
-      //   break;
-      // }
       listeners.set(data.uuid, data.selector);
       runSelector(data.selector, data.uuid);
       break;
