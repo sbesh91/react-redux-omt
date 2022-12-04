@@ -9,15 +9,10 @@ function run() {
 }
 
 const CounterDemo = () => {
-  const one = useWorkerSelector<ReturnType<typeof selectors.one>>("one");
-  const two = useWorkerSelector<ReturnType<typeof selectors.two>>("two", [
-    "hello",
-  ]);
-  const three = useWorkerSelector<ReturnType<typeof selectors.three>>("three");
-  const four = useWorkerSelector<ReturnType<typeof selectors.four>>(
-    "four",
-    one.value
-  );
+  const one = useWorkerSelector(selectors.one);
+  const two = useWorkerSelector(selectors.two, "hello");
+  const three = useWorkerSelector(selectors.three, "three");
+  const four = useWorkerSelector(selectors.four, one.value);
 
   useEffect(() => {
     // const interval = setInterval(() => {

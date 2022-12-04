@@ -16,11 +16,12 @@ worker.addEventListener(
 export function dispatch(action: Action) {
   worker.postMessage({ type: "dispatch", action });
 }
-
-export function useWorkerSelector<T>(
-  selector: BaseSelector["selector"],
-  ...params: BaseSelector["params"]
-) {
+export function useWorkerSelector<
+  StateType,
+  T,
+  Params extends any[],
+  Fn extends (stateType: StateType, ...params: Params) => T
+>(selector: Fn, ...params: Params) {
   const currentUuid = useSignal("");
   const state = useSignal<T | null>(null);
 
