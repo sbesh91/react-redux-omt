@@ -3,19 +3,19 @@ import { Action } from "redux";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import { BaseSelector, SelectorReturn } from "./types";
 
-export const worker = new Worker("./basic-worker.ts", { type: "module" });
-
-export function dispatch(action: Action) {
-  worker.postMessage({ type: "dispatch", action });
-}
-
+const worker = new Worker("./basic-worker.ts", { type: "module" });
 const workerEvent = new Signal<SelectorReturn<unknown> | null>(null);
+
 worker.addEventListener(
   "message",
   ({ data }: MessageEvent<SelectorReturn<unknown>>) => {
     workerEvent.value = data;
   }
 );
+
+export function dispatch(action: Action) {
+  worker.postMessage({ type: "dispatch", action });
+}
 
 export function useWorkerSelector<T>(
   selector: BaseSelector["selector"],
