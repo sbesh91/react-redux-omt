@@ -25,6 +25,7 @@
     "@rollup/plugin-commonjs": "^23.0.3",
     "@rollup/plugin-node-resolve": "15.0.1",
     "@surma/rollup-plugin-off-main-thread": "^1.1.1",
+    "@types/react-dom": "^18.0.9",
     "buffer-backed-object": "^0.2.2",
     "comlink": "^4.0.2",
     "immer": "^9.0.3",
@@ -38,6 +39,5 @@
     "statikk": "^2.2.0",
     "use-deep-compare-effect": "^1.8.1",
     "uuid": "^8.3.2"
-  },
-  "devDependencies": {}
+  }
 }

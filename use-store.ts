@@ -1,9 +1,9 @@
 import { Signal, useSignal, useSignalEffect } from "@preact/signals-react";
 import { Action } from "redux";
 import useDeepCompareEffect from "use-deep-compare-effect";
-import { RootState, SelectorReturn } from "./types";
+import { SelectorFunction, SelectorReturn, WorkerSelector } from "./types";
 
-const worker = new Worker("./basic-worker.ts", { type: "module" });
+const worker = new Worker("./worker.ts", { type: "module" });
 const workerEvent = new Signal<SelectorReturn<unknown> | null>(null);
 
 worker.addEventListener(
@@ -17,27 +17,28 @@ export function dispatch(action: Action) {
   worker.postMessage({ type: "dispatch", action });
 }
 export function useWorkerSelector<
-  T,
-  Params extends any[],
-  Fn extends (stateType: RootState, ...params: Params) => T
->(selector: Fn, ...params: Params) : Signal<T | null> {
+  Fn extends SelectorFunction<T>,
+  Params extends Parameters<Fn> | unknown[],
+  T
+>(selector: WorkerSelector<Fn>, ...params: Params) {
   const currentUuid = useSignal("");
-  const state = useSignal<T | null>(null);
+  const state = useSignal<ReturnType<Fn> | null>(null);
 
   useSignalEffect(() => {
     const data = workerEvent.value;
     if (data && data.uuid === currentUuid.peek()) {
-      state.value = data.value as T;
+      state.value = data.value as ReturnType<Fn>;
     }
   });
 
   useDeepCompareEffect(() => {
     const uuid = uuidv4();
     currentUuid.value = uuid;
+
     worker.postMessage({
       type: "subscribe",
       uuid,
-      selector: { selector, params },
+      selector: { selector: selector.name, params },
     });
 
     return () => {

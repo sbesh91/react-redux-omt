@@ -2,7 +2,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import { counterSliceReducer, counterStoreState } from "./actions";
 import { selectors } from "./selectors";
-import { BaseSelector, MessageType, RootState } from "./types";
+import {
+  BaseSelector,
+  MessageType,
+  RootState,
+  SelectorFunction,
+} from "./types";
 
 const rootReducer = combineReducers({
   counterSliceReducer,
@@ -39,15 +44,15 @@ store.subscribe(() => {
 });
 
 function runSelector(value: BaseSelector, key: string) {
-  const selector = selectors[value.selector];
+  const selector: SelectorFunction<unknown> | undefined =
+    selectors[value.selector]?.fn;
   const params = value.params ?? [];
-  const returnValue: ReturnType<typeof selector> = selector.apply(null, [
-    store.getState(),
-    ...params,
-  ]);
+  if (selector) {
+    const returnValue = selector(store.getState(), params);
 
-  postMessage({
-    uuid: key,
-    value: returnValue,
-  });
+    postMessage({
+      uuid: key,
+      value: returnValue,
+    });
+  }
 }

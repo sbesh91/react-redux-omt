@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import createCachedSelector, { LruMapCache } from "re-reselect";
-import { RootState } from "./types";
+import { RootState, SelectorFunction, WorkerSelector } from "./types";
 
 function cacheByValue<T>(_: RootState, val: T) {
   return "" + val || "";
@@ -23,7 +23,7 @@ const three = createSelector(
 
 const four = createCachedSelector(
   (state: RootState) => state,
-  (_, val: number) => val,
+  (_: RootState, val: number) => val,
   (state: RootState) => three(state),
   (_, __, res) => {
     return res * 3;
@@ -33,9 +33,16 @@ const four = createCachedSelector(
   cacheObject: new LruMapCache({ cacheSize: 5 }),
 });
 
+function createWorkerSelector<T>(name: string, selector: T): WorkerSelector<T> {
+  return {
+    name,
+    fn: selector,
+  };
+}
+
 export const selectors = {
-  one,
-  two,
-  three,
-  four,
-} as const;
+  one: createWorkerSelector("one", one),
+  two: createWorkerSelector("two", two),
+  three: createWorkerSelector("three", three),
+  four: createWorkerSelector("four", four),
+};

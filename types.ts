@@ -26,3 +26,10 @@ export type SelectorReturn<T> = {
 export interface CounterSliceState {
   counter: number;
 }
+
+export type SelectorFunction<T> = (state: RootState, ...params: any[]) => T;
+
+export interface WorkerSelector<T> {
+  name: string;
+  fn: T;
+}
