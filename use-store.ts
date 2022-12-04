@@ -17,7 +17,7 @@ worker.addEventListener(
   }
 );
 
-export function useWorkerStore<T>(
+export function useWorkerSelector<T>(
   selector: BaseSelector["selector"],
   ...params: BaseSelector["params"]
 ) {

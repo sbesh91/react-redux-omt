@@ -1,17 +1,23 @@
 import React, { useEffect } from "react";
 import { render } from "react-dom";
 import { decrement, increment } from "./actions";
-import { dispatch, useWorkerStore } from "./use-store";
+import { selectors } from "./selectors";
+import { dispatch, useWorkerSelector } from "./use-store";
 
 function run() {
   render(<CounterDemo />, document.getElementById("root"));
 }
 
 const CounterDemo = () => {
-  const one = useWorkerStore<number>("one");
-  const two = useWorkerStore<number>("two", "hello");
-  const three = useWorkerStore<number>("three");
-  const four = useWorkerStore<number>("four", one.value);
+  const one = useWorkerSelector<ReturnType<typeof selectors.one>>("one");
+  const two = useWorkerSelector<ReturnType<typeof selectors.two>>("two", [
+    "hello",
+  ]);
+  const three = useWorkerSelector<ReturnType<typeof selectors.three>>("three");
+  const four = useWorkerSelector<ReturnType<typeof selectors.four>>(
+    "four",
+    one.value
+  );
 
   useEffect(() => {
     // const interval = setInterval(() => {

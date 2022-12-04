@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { Action, combineReducers } from "redux";
+import { combineReducers } from "redux";
 import { counterSliceReducer, counterStoreState } from "./actions";
 import { selectors } from "./selectors";
 import { BaseSelector, MessageType, RootState } from "./types";
@@ -12,14 +12,9 @@ const init: RootState = {
   counterSliceReducer: counterStoreState,
 };
 
-const reducer = (state: RootState = init, action: Action) => {
-  const next = rootReducer(state, action);
-
-  return next;
-};
-
 const store = configureStore({
-  reducer,
+  reducer: rootReducer,
+  preloadedState: init,
 });
 
 const listeners = new Map<string, BaseSelector>();

@@ -15,7 +15,7 @@ export type BaseSelector = {
 };
 
 export type RootState = CombinedState<{
-  counterSliceReducer: StoreState;
+  counterSliceReducer: CounterSliceState;
 }>;
 
 export type SelectorReturn<T> = {
@@ -23,6 +23,6 @@ export type SelectorReturn<T> = {
   value: T;
 };
 
-export interface StoreState {
+export interface CounterSliceState {
   counter: number;
 }
