@@ -16,9 +16,10 @@ worker.addEventListener(
 export function dispatch(action: Action) {
   worker.postMessage({ type: "dispatch", action });
 }
+
 export function useWorkerSelector<
   Fn extends SelectorFunction<T>,
-  Params extends Parameters<Fn> | unknown[],
+  Params extends Parameters<Fn>,
   T
 >(selector: WorkerSelector<Fn>, ...params: Params) {
   const currentUuid = useSignal("");
@@ -35,6 +36,10 @@ export function useWorkerSelector<
     const uuid = uuidv4();
     currentUuid.value = uuid;
 
+    // remove the root state passed in once
+    // I can figure out how to not need it
+    // to satisfy function parameters
+    params.shift();
     worker.postMessage({
       type: "subscribe",
       uuid,

@@ -3,17 +3,24 @@ import { useEffect } from "react";
 import { render } from "react-dom";
 import { decrement, increment } from "./actions";
 import { selectors } from "./selectors";
+import { RootState } from "./types";
 import { dispatch, useWorkerSelector } from "./use-store";
 
 function run() {
   render(<CounterDemo />, document.getElementById("root"));
 }
 
+const init: RootState = {
+  counterSliceReducer: {
+    counter: 0,
+  },
+};
+
 const CounterDemo = () => {
-  const one = useWorkerSelector(selectors.one);
-  const two = useWorkerSelector(selectors.two, "hello");
-  const three = useWorkerSelector(selectors.three);
-  const four = useWorkerSelector(selectors.four, one.value ?? 0);
+  const one = useWorkerSelector(selectors.one, init);
+  const two = useWorkerSelector(selectors.two, init, "hello");
+  const three = useWorkerSelector(selectors.three, init);
+  const four = useWorkerSelector(selectors.four, init, one.value ?? 0);
 
   useEffect(() => {
     // const interval = setInterval(() => {
