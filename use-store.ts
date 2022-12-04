@@ -20,7 +20,7 @@ export function useWorkerSelector<
   T,
   Params extends any[],
   Fn extends (stateType: RootState, ...params: Params) => T
->(selector: Fn, ...params: Params) {
+>(selector: Fn, ...params: Params) : Signal<T | null> {
   const currentUuid = useSignal("");
   const state = useSignal<T | null>(null);
 
