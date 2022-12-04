@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
+import { useEffect } from "react";
 import { render } from "react-dom";
 import { decrement, increment } from "./actions";
 import { selectors } from "./selectors";
@@ -11,7 +12,7 @@ function run() {
 const CounterDemo = () => {
   const one = useWorkerSelector(selectors.one);
   const two = useWorkerSelector(selectors.two, "hello");
-  const three = useWorkerSelector(selectors.three, "three");
+  const three = useWorkerSelector(selectors.three);
   const four = useWorkerSelector(selectors.four, one.value);
 
   useEffect(() => {

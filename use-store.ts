@@ -1,7 +1,7 @@
 import { Signal, useSignal, useSignalEffect } from "@preact/signals-react";
 import { Action } from "redux";
 import useDeepCompareEffect from "use-deep-compare-effect";
-import { BaseSelector, SelectorReturn } from "./types";
+import { RootState, SelectorReturn } from "./types";
 
 const worker = new Worker("./basic-worker.ts", { type: "module" });
 const workerEvent = new Signal<SelectorReturn<unknown> | null>(null);
@@ -17,10 +17,9 @@ export function dispatch(action: Action) {
   worker.postMessage({ type: "dispatch", action });
 }
 export function useWorkerSelector<
-  StateType,
   T,
   Params extends any[],
-  Fn extends (stateType: StateType, ...params: Params) => T
+  Fn extends (stateType: RootState, ...params: Params) => T
 >(selector: Fn, ...params: Params) {
   const currentUuid = useSignal("");
   const state = useSignal<T | null>(null);
