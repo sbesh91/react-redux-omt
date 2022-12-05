@@ -18,9 +18,8 @@ export function dispatch(action: Action) {
 }
 
 export function useWorkerSelector<
-  Fn extends SelectorFunction<T>,
-  Params extends Parameters<Fn>,
-  T
+  Fn extends SelectorFunction,
+  Params extends Parameters<Fn>
 >(selector: WorkerSelector<Fn>, ...params: Params) {
   const currentUuid = useSignal("");
   const state = useSignal<ReturnType<Fn> | null>(null);
