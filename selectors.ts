@@ -45,4 +45,4 @@ export const selectors = {
   two: createWorkerSelector("two", two),
   three: createWorkerSelector("three", three),
   four: createWorkerSelector("four", four),
-};
+} as const;
