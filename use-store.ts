@@ -17,10 +17,11 @@ export function dispatch(action: Action) {
   worker.postMessage({ type: "dispatch", action });
 }
 
+type FunctionParameters<T extends SelectorFunction> = Parameters<T>;
+
 export function useWorkerSelector<
   Fn extends SelectorFunction,
-  Params extends Parameters<Fn>
->(selector: WorkerSelector<Fn>, ...params: Params) {
+>(selector: WorkerSelector<Fn>, ...params: FunctionParameters<Fn> | any[]) {
   const currentUuid = useSignal("");
   const state = useSignal<ReturnType<Fn> | null>(null);
 
@@ -35,10 +36,6 @@ export function useWorkerSelector<
     const uuid = crypto.randomUUID();
     currentUuid.value = uuid;
 
-    // remove the root state passed in once
-    // I can figure out how to not need it
-    // to satisfy function parameters
-    params.shift();
     worker.postMessage({
       type: "subscribe",
       uuid,

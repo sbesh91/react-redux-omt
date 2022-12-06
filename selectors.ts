@@ -33,6 +33,10 @@ const four = createCachedSelector(
   cacheObject: new LruMapCache({ cacheSize: 5 }),
 });
 
+function five(state: RootState, one: number, two: number, three: string) {
+  return `${three}: ${state.counterSliceReducer.counter}, sum: ${one + two}`;
+}
+
 function createWorkerSelector<T>(name: string, selector: T): WorkerSelector<T> {
   return {
     name,
@@ -45,4 +49,5 @@ export const selectors = {
   two: createWorkerSelector("two", two),
   three: createWorkerSelector("three", three),
   four: createWorkerSelector("four", four),
+  five: createWorkerSelector("five", five),
 } as const;

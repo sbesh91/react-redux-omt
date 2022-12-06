@@ -27,7 +27,10 @@
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true, // accessing index must always check for undefined
     "noUnusedLocals": true, // Report errors on unused local variables.
-    "noUnusedParameters": true // Report errors on unused parameters in functions
+    "noUnusedParameters": true,
+    // Report errors on unused parameters in functions
+    "jsx": "react",
+    "skipLibCheck": true
   },
   "include": ["./**/*.ts"],
   "exclude": ["node_modules/**/*"]

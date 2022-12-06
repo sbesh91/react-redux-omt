@@ -48,7 +48,7 @@ function runSelector(value: BaseSelector, key: string) {
     selectors[value.selector]?.fn;
   const params = value.params ?? [];
   if (selector) {
-    const returnValue = selector(store.getState(), params);
+    const returnValue = selector(store.getState(), ...params);
 
     postMessage({
       uuid: key,
