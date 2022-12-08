@@ -17,11 +17,17 @@ export function dispatch(action: Action) {
   worker.postMessage({ type: "dispatch", action });
 }
 
-type FunctionParameters<T extends SelectorFunction> = Parameters<T>;
+type FunctionParameters<T extends SelectorFunction> =
+  | [Parameters<T>[1]]
+  | [Parameters<T>[1], Parameters<T>[2]]
+  | [Parameters<T>[1], Parameters<T>[2], Parameters<T>[3]]
+  | [Parameters<T>[1], Parameters<T>[2], Parameters<T>[3], Parameters<T>[4]]
+  | [Parameters<T>[1], Parameters<T>[2], Parameters<T>[3], Parameters<T>[4], Parameters<T>[5]];
 
-export function useWorkerSelector<
-  Fn extends SelectorFunction,
->(selector: WorkerSelector<Fn>, ...params: FunctionParameters<Fn> | any[]) {
+export function useWorkerSelector<Fn extends SelectorFunction>(
+  selector: WorkerSelector<Fn>,
+  params?: FunctionParameters<Fn>
+) {
   const currentUuid = useSignal("");
   const state = useSignal<ReturnType<Fn> | null>(null);
 
