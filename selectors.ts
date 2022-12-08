@@ -15,18 +15,19 @@ function two(state: RootState, hello: string) {
 }
 
 const three = createSelector(
+  one,
   (state: RootState) => state,
-  (state) => {
-    return state.counterSliceReducer.counter * 2;
+  (res, state) => {
+    return res + state.counterSliceReducer.counter * 2;
   }
 );
 
 const four = createCachedSelector(
   (state: RootState) => state,
   (_: RootState, val: number) => val,
-  (state: RootState) => three(state),
-  (_, __, res) => {
-    return res * 3;
+  three,
+  (_, val, res) => {
+    return res * 3 - val;
   }
 )({
   keySelector: cacheByValue,
