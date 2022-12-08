@@ -1,7 +1,7 @@
 import { Signal, useSignal, useSignalEffect } from "@preact/signals-react";
 import { Action } from "redux";
 import useDeepCompareEffect from "use-deep-compare-effect";
-import { SelectorFunction, SelectorReturn, WorkerSelector } from "./types";
+import { FunctionParameters, SelectorFunction, SelectorReturn, WorkerSelector } from "./types";
 
 const worker = new Worker("./worker.ts", { type: "module" });
 const workerEvent = new Signal<SelectorReturn<unknown> | null>(null);
@@ -17,24 +17,48 @@ export function dispatch(action: Action) {
   worker.postMessage({ type: "dispatch", action });
 }
 
-type FunctionParameters<T extends SelectorFunction> =
-  | [Parameters<T>[1]]
-  | [Parameters<T>[1], Parameters<T>[2]]
-  | [Parameters<T>[1], Parameters<T>[2], Parameters<T>[3]]
-  | [Parameters<T>[1], Parameters<T>[2], Parameters<T>[3], Parameters<T>[4]]
-  | [Parameters<T>[1], Parameters<T>[2], Parameters<T>[3], Parameters<T>[4], Parameters<T>[5]];
-
-export function useWorkerSelector<Fn extends SelectorFunction>(
+function useWorkerSelector<
+  Fn extends SelectorFunction,
+  Return extends ReturnType<Fn>
+>(
   selector: WorkerSelector<Fn>,
-  params?: FunctionParameters<Fn>
-) {
+  params: FunctionParameters<Fn>,
+  defaultValue: Return
+): Signal<Return>;
+
+function useWorkerSelector<
+  Fn extends SelectorFunction,
+  Return extends ReturnType<Fn>
+>(
+  selector: WorkerSelector<Fn>,
+  params: FunctionParameters<Fn>,
+  defaultValue?: Return
+): Signal<Return | undefined>;
+
+function useWorkerSelector<
+  Fn extends SelectorFunction,
+  Return extends ReturnType<Fn>
+>(
+  selector: WorkerSelector<Fn>,
+  params?: FunctionParameters<Fn>,
+  defaultValue?: Return
+): Signal<Return | undefined>;
+
+function useWorkerSelector<
+  Fn extends SelectorFunction,
+  Return extends ReturnType<Fn>
+>(
+  selector: WorkerSelector<Fn>,
+  params?: FunctionParameters<Fn>,
+  defaultValue?: Return
+): Signal<Return | undefined> {
   const currentUuid = useSignal("");
-  const state = useSignal<ReturnType<Fn> | null>(null);
+  const state = useSignal(defaultValue);
 
   useSignalEffect(() => {
     const data = workerEvent.value;
     if (data && data.uuid === currentUuid.peek()) {
-      state.value = data.value as ReturnType<Fn>;
+      state.value = data.value as Return;
     }
   });
 
@@ -54,4 +78,8 @@ export function useWorkerSelector<Fn extends SelectorFunction>(
   }, [selector, params]);
 
   return state;
+}
+
+export {
+  useWorkerSelector,
 }
