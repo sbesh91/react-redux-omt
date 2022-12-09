@@ -9,6 +9,8 @@
   "scripts": {
     "clean": "rm -rf out",
     "build": "npm run clean && microbundle",
+    "test": "",
+    "deploy": "np",
     "watch-demo": "rollup -c -w -m",
     "serve": "statikk --port 8080 --coi dist"
   },
