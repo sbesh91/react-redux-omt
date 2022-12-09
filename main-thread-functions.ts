@@ -1,20 +1,29 @@
 import { Signal, useSignal, useSignalEffect } from "@preact/signals-react";
 import { Action } from "redux";
 import useDeepCompareEffect from "use-deep-compare-effect";
-import { FunctionParameters, SelectorFunction, SelectorReturn, WorkerSelector } from "./types";
+import {
+  FunctionParameters,
+  SelectorFunction,
+  SelectorReturn,
+  WorkerSelector,
+} from "./types";
 
-const worker = new Worker("./worker.ts", { type: "module" });
+let worker: Worker | undefined;
 const workerEvent = new Signal<SelectorReturn<unknown> | null>(null);
 
-worker.addEventListener(
-  "message",
-  ({ data }: MessageEvent<SelectorReturn<unknown>>) => {
-    workerEvent.value = data;
-  }
-);
+export function initializeWorkerStoreListener(w: Worker) {
+  worker = w;
+
+  w.addEventListener(
+    "message",
+    ({ data }: MessageEvent<SelectorReturn<unknown>>) => {
+      workerEvent.value = data;
+    }
+  );
+}
 
 export function dispatch(action: Action) {
-  worker.postMessage({ type: "dispatch", action });
+  worker?.postMessage({ type: "dispatch", action });
 }
 
 function useWorkerSelector<
@@ -66,20 +75,18 @@ function useWorkerSelector<
     const uuid = crypto.randomUUID();
     currentUuid.value = uuid;
 
-    worker.postMessage({
+    worker?.postMessage({
       type: "subscribe",
       uuid,
       selector: { selector: selector.name, params },
     });
 
     return () => {
-      worker.postMessage({ type: "unsubscribe", uuid });
+      worker?.postMessage({ type: "unsubscribe", uuid });
     };
   }, [selector, params]);
 
   return state;
 }
 
-export {
-  useWorkerSelector,
-}
+export { useWorkerSelector };

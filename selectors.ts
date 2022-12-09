@@ -1,6 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit";
 import createCachedSelector, { LruMapCache } from "re-reselect";
-import { RootState, WorkerSelector } from "./types";
+import { createWorkerSelector } from "worker-functions";
+import { RootState } from "./types";
 
 function cacheByValue<T>(_: RootState, val: T) {
   return "" + val || "";
@@ -36,13 +37,6 @@ const four = createCachedSelector(
 
 function five(state: RootState, one: number, two: number, three: string) {
   return `${three}: ${state.counterSliceReducer.counter}, sum: ${one + two}`;
-}
-
-function createWorkerSelector<T>(name: string, selector: T): WorkerSelector<T> {
-  return {
-    name,
-    fn: selector,
-  };
 }
 
 export const selectors = {

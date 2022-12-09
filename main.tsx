@@ -3,7 +3,14 @@ import { useEffect } from "react";
 import { render } from "react-dom";
 import { decrement, increment } from "./actions";
 import { selectors } from "./selectors";
-import { dispatch, useWorkerSelector } from "./use-store";
+import {
+  dispatch,
+  initializeWorkerStoreListener,
+  useWorkerSelector,
+} from "./main-thread-functions";
+
+const worker = new Worker("./worker.ts", { type: "module" });
+initializeWorkerStoreListener(worker);
 
 function run() {
   render(<CounterDemo />, document.getElementById("root"));
@@ -14,7 +21,11 @@ const CounterDemo = () => {
   const two = useWorkerSelector(selectors.two, ["hello"]);
   const three = useWorkerSelector(selectors.three);
   const four = useWorkerSelector(selectors.four, [one.value ?? 0]);
-  const five = useWorkerSelector(selectors.five, [2, 4, 'world'], 'initial rendered value');
+  const five = useWorkerSelector(
+    selectors.five,
+    [2, 4, "world"],
+    "initial rendered value"
+  );
 
   useEffect(() => {
     // const interval = setInterval(() => {
