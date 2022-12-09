@@ -1,7 +1,7 @@
 {
   "name": "react-redux-omt",
-  "version": "0.0.1",
-  "description": "",
+  "version": "0.0.2",
+  "description": "Tools for running actions, selectors, and redux off the main thread.",
   "type": "module",
   "source": "src/index.ts",
   "main": "out/index.js",
@@ -20,7 +20,7 @@
     "@preact/signals-react": "1.2.1",
     "use-deep-compare-effect": "1.8.1"
   },
-  "dependencies": {
+  "devDependencies": {
     "@babel/core": "^7.20.5",
     "@babel/helper-builder-react-jsx": "^7.19.0",
     "@babel/plugin-transform-react-jsx": "^7.19.0",
