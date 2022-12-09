@@ -37,6 +37,7 @@
     "buffer-backed-object": "^0.2.2",
     "immer": "^9.0.3",
     "microbundle": "^0.15.1",
+    "np": "^7.6.2",
     "re-reselect": "^4.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
