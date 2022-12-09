@@ -11,7 +11,7 @@ import {
 let worker: Worker | undefined;
 const workerEvent = new Signal<SelectorReturn<unknown> | null>(null);
 
-export function initializeWorkerStoreListener(w: Worker) {
+function initializeWorkerStoreListener(w: Worker) {
   worker = w;
 
   w.addEventListener(
@@ -22,7 +22,7 @@ export function initializeWorkerStoreListener(w: Worker) {
   );
 }
 
-export function dispatch(action: Action) {
+function dispatch(action: Action) {
   worker?.postMessage({ type: "dispatch", action });
 }
 
@@ -89,4 +89,4 @@ function useWorkerSelector<
   return state;
 }
 
-export { useWorkerSelector };
+export { useWorkerSelector, initializeWorkerStoreListener, dispatch };

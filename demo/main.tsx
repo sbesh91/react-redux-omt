@@ -7,9 +7,9 @@ import {
   dispatch,
   initializeWorkerStoreListener,
   useWorkerSelector,
-} from "./main-thread-functions";
+} from "../src/main-thread-functions";
 
-const worker = new Worker("./worker.ts", { type: "module" });
+const worker = new Worker("./store.ts", { type: "module" });
 initializeWorkerStoreListener(worker);
 
 function run() {

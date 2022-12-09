@@ -5,13 +5,13 @@ import {
   RootState,
   SelectorFunction,
   WorkerSelector,
-} from "types";
+} from "./types";
 
 let selectors: Record<string, WorkerSelector<SelectorFunction>> | undefined;
 
 const listeners = new Map<string, BaseSelector>();
 
-export function initializeWorkerStore(
+function initializeWorkerStore(
   store: ToolkitStore<RootState>,
   s: Record<string, WorkerSelector<SelectorFunction>>
 ) {
@@ -24,7 +24,7 @@ export function initializeWorkerStore(
         break;
       case "subscribe":
         listeners.set(data.uuid, data.selector);
-        runSelector(store.getState(), data.selector, data.uuid);
+        runSelector(data.selector, data.uuid);
         break;
       case "unsubscribe":
         listeners.delete(data.uuid);
@@ -33,36 +33,29 @@ export function initializeWorkerStore(
   });
 
   store.subscribe(() => {
-    listeners.forEach((value, key) =>
-      runSelector(store.getState(), value, key)
-    );
+    listeners.forEach(runSelector);
   });
-}
 
-export function runSelector(
-  state: RootState,
-  value: BaseSelector,
-  key: string
-) {
-  const selector: SelectorFunction<unknown> | undefined =
-    selectors?.[value.selector]?.fn;
-  const params = value.params ?? [];
-  if (selector) {
-    const returnValue = selector(state, ...params);
+  function runSelector(value: BaseSelector, key: string) {
+    const selector: SelectorFunction<unknown> | undefined =
+      selectors?.[value.selector]?.fn;
+    const params = value.params ?? [];
+    if (selector) {
+      const returnValue = selector(store.getState(), ...params);
 
-    postMessage({
-      uuid: key,
-      value: returnValue,
-    });
+      postMessage({
+        uuid: key,
+        value: returnValue,
+      });
+    }
   }
 }
 
-export function createWorkerSelector<T>(
-  name: string,
-  selector: T
-): WorkerSelector<T> {
+function createWorkerSelector<T>(name: string, selector: T): WorkerSelector<T> {
   return {
     name,
     fn: selector,
   };
 }
+
+export { initializeWorkerStore, createWorkerSelector };

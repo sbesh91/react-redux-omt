@@ -1,5 +1,4 @@
 import { Action, CombinedState } from "@reduxjs/toolkit";
-import { selectors } from "./selectors";
 
 export type MessageType =
   | {
@@ -10,7 +9,7 @@ export type MessageType =
   | { type: "unsubscribe"; uuid: string };
 
 export type BaseSelector = {
-  selector: keyof typeof selectors;
+  selector: string;
   params: ReadonlyArray<unknown>;
 };
 

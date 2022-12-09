@@ -10,7 +10,7 @@ const isProduction = process.env.NODE_ENV === "production";
 const extensions = [".js", ".jsx", ".ts", ".tsx"];
 
 module.exports = {
-  input: "index.html",
+  input: "demo/index.html",
   output: {
     dir: "dist",
     format: "amd",
