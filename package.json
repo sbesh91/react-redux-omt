@@ -9,7 +9,7 @@
   "scripts": {
     "clean": "rm -rf out",
     "build": "npm run clean && microbundle",
-    "test": "",
+    "test": "ts-mocha --exit",
     "deploy": "np",
     "watch-demo": "rollup -c -w -m",
     "serve": "statikk --port 8080 --coi dist"
@@ -35,10 +35,13 @@
     "@rollup/plugin-commonjs": "^23.0.3",
     "@rollup/plugin-node-resolve": "15.0.1",
     "@surma/rollup-plugin-off-main-thread": "^1.1.1",
+    "@testing-library/react": "^13.4.0",
+    "@types/mocha": "^10.0.1",
     "@types/react-dom": "^18.0.9",
     "buffer-backed-object": "^0.2.2",
     "immer": "^9.0.3",
     "microbundle": "^0.15.1",
+    "mocha": "^10.1.0",
     "np": "^7.6.2",
     "re-reselect": "^4.0.1",
     "react": "^18.2.0",
@@ -48,6 +51,8 @@
     "rollup": "^3.5.0",
     "rollup-plugin-replace": "^2.2.0",
     "statikk": "^2.2.0",
-    "use-deep-compare-effect": "^1.8.1"
+    "ts-mocha": "^10.0.0",
+    "use-deep-compare-effect": "^1.8.1",
+    "web-worker": "^1.2.0"
   }
 }

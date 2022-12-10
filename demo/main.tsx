@@ -18,7 +18,7 @@ function run() {
 
 const CounterDemo = () => {
   const one = useWorkerSelector(selectors.one);
-  const two = useWorkerSelector(selectors.two, ["hello"]);
+  const two = useWorkerSelector(selectors.two, ["hello"], "");
   const three = useWorkerSelector(selectors.three);
   const four = useWorkerSelector(selectors.four, [one.value ?? 0]);
   const five = useWorkerSelector(

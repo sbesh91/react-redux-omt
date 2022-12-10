@@ -18,10 +18,10 @@ export type SelectorReturn<T> = {
   value: T;
 };
 
-export type SelectorFunction<T = unknown> = (
-  state: unknown,
+export type SelectorFunction<T = unknown, K = unknown> = (
+  state: T,
   ...params: any[]
-) => T;
+) => K;
 
 export interface WorkerSelector<T> {
   name: string;

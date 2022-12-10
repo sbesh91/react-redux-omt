@@ -1,6 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import toolkit, { PayloadAction } from "@reduxjs/toolkit";
 import produce from "immer";
 import { CounterSliceState } from "./types";
+const { createSlice } = toolkit;
 
 export let counterStoreState: CounterSliceState = {
   counter: 0,

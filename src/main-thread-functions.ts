@@ -27,7 +27,7 @@ function dispatch(action: Action) {
 }
 
 function useWorkerSelector<
-  Fn extends SelectorFunction,
+  Fn extends SelectorFunction<Parameters<Fn>[0], ReturnType<Fn>>,
   Return extends ReturnType<Fn>
 >(
   selector: WorkerSelector<Fn>,
@@ -36,7 +36,7 @@ function useWorkerSelector<
 ): Signal<Return>;
 
 function useWorkerSelector<
-  Fn extends SelectorFunction,
+  Fn extends SelectorFunction<Parameters<Fn>[0], ReturnType<Fn>>,
   Return extends ReturnType<Fn>
 >(
   selector: WorkerSelector<Fn>,
@@ -45,7 +45,7 @@ function useWorkerSelector<
 ): Signal<Return | undefined>;
 
 function useWorkerSelector<
-  Fn extends SelectorFunction,
+  Fn extends SelectorFunction<Parameters<Fn>[0], ReturnType<Fn>>,
   Return extends ReturnType<Fn>
 >(
   selector: WorkerSelector<Fn>,
@@ -54,7 +54,7 @@ function useWorkerSelector<
 ): Signal<Return | undefined>;
 
 function useWorkerSelector<
-  Fn extends SelectorFunction,
+  Fn extends SelectorFunction<Parameters<Fn>[0], ReturnType<Fn>>,
   Return extends ReturnType<Fn>
 >(
   selector: WorkerSelector<Fn>,
@@ -89,4 +89,9 @@ function useWorkerSelector<
   return state;
 }
 
-export { useWorkerSelector, initializeWorkerStoreListener, dispatch };
+export {
+  workerEvent,
+  useWorkerSelector,
+  initializeWorkerStoreListener,
+  dispatch,
+};

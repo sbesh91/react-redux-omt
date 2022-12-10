@@ -6,16 +6,12 @@ import {
   WorkerSelector,
 } from "./types";
 
-let selectors: Record<string, WorkerSelector<SelectorFunction>> | undefined;
-
 const listeners = new Map<string, SelectorReference>();
 
 function initializeWorkerStore<T>(
   store: ToolkitStore<T>,
-  s: Record<string, WorkerSelector<SelectorFunction>>
+  selectors: Record<string, WorkerSelector<SelectorFunction<T>>>
 ) {
-  selectors = s;
-
   addEventListener("message", ({ data }: MessageEvent<MessageType>) => {
     switch (data.type) {
       case "dispatch":
@@ -36,9 +32,10 @@ function initializeWorkerStore<T>(
   });
 
   function runSelector(value: SelectorReference, key: string) {
-    const selector: SelectorFunction<unknown> | undefined =
+    const selector: SelectorFunction<T> | undefined =
       selectors?.[value.selector]?.fn;
     const params = value.params ?? [];
+
     if (selector) {
       const returnValue = selector(store.getState(), ...params);
 
@@ -50,7 +47,10 @@ function initializeWorkerStore<T>(
   }
 }
 
-function createWorkerSelector<T>(name: string, selector: T): WorkerSelector<T> {
+function createWorkerSelector<T extends SelectorFunction<Parameters<T>[0]>>(
+  name: string,
+  selector: T
+): WorkerSelector<T> {
   return {
     name,
     fn: selector,
