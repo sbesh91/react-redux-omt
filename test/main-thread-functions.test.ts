@@ -1,20 +1,26 @@
 import {
   initializeWorkerStoreListener,
   workerEvent,
+  dispatch,
 } from "../src/main-thread-functions";
-import Worker from "web-worker";
 import * as assert from "assert";
 import "mocha";
 import crypto from "crypto";
-import { effect } from "@preact/signals-react";
-const url = new URL("./store.ts", import.meta.url);
-const worker = new Worker(url, { type: "module" });
+import { Worker } from "./helpers";
 
 describe("initialize worker store listener", () => {
-  it("should construct a worker listener", () => {
-    const uuid = crypto.randomUUID();
-    assert.ok(worker, "worker must be defined");
+  const worker = new Worker() as any;
 
+  beforeEach(() => {
+    workerEvent.value = null;
+  });
+
+  it("should construct a worker", () => {
+    assert.ok(worker, "worker must be defined");
+  });
+
+  it("should listen to worker for events", () => {
+    const uuid = crypto.randomUUID();
     initializeWorkerStoreListener(worker);
 
     worker.postMessage({
@@ -23,10 +29,12 @@ describe("initialize worker store listener", () => {
       selector: { selector: "one", params: [] },
     });
 
-    effect(() => {
-      console.log(workerEvent.value);
+    assert.ok(workerEvent.value !== null, "events should not be null");
+  });
 
-      // assert.ok(workerEvent.value, "events should not be null");
-    });
+  it("dispatch should send events to the worker", () => {
+    dispatch({ type: "test" });
+
+    assert.ok(workerEvent.value !== null, "events should not be null");
   });
 });
