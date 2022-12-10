@@ -9,7 +9,9 @@ import {
   useWorkerSelector,
 } from "../src/main-thread-functions";
 
-const worker = new Worker("./store.ts", { type: "module" });
+const worker = new Worker(new URL("store.ts", import.meta.url), {
+  type: "module",
+});
 initializeWorkerStoreListener(worker);
 
 function run() {
