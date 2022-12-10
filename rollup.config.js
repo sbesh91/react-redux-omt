@@ -1,15 +1,15 @@
-const commonjs = require("@rollup/plugin-commonjs");
-const nodeResolve = require("@rollup/plugin-node-resolve");
-const replace = require("rollup-plugin-replace");
-const OMT = require("@surma/rollup-plugin-off-main-thread");
-const babel = require("@rollup/plugin-babel");
-const html = require("@open-wc/rollup-plugin-html");
+import commonjs from "@rollup/plugin-commonjs";
+import nodeResolve from "@rollup/plugin-node-resolve";
+import replace from "rollup-plugin-replace";
+import OMT from "@surma/rollup-plugin-off-main-thread";
+import babel from "@rollup/plugin-babel";
+import html from "@open-wc/rollup-plugin-html";
 
 const isProduction = process.env.NODE_ENV === "production";
 
 const extensions = [".js", ".jsx", ".ts", ".tsx"];
 
-module.exports = {
+export default {
   input: "demo/index.html",
   output: {
     dir: "dist",
@@ -29,7 +29,7 @@ module.exports = {
       minified: isProduction,
       configFile: "./babel.config.json",
       extensions,
-      include: ["./*"],
+      include: ["./**/*"],
       exclude: "node_modules/**",
       sourceMaps: "both",
     }),
