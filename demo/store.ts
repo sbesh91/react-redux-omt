@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
+import { RootState } from "types";
 import { initializeWorkerStore } from "../src/worker-functions";
 import { counterSliceReducer, counterStoreState } from "./actions";
 import { selectors } from "./selectors";
-import { RootState } from "../src/types";
 
 const rootReducer = combineReducers({
   counterSliceReducer,

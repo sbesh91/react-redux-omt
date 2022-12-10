@@ -1,7 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit";
 import createCachedSelector, { LruMapCache } from "re-reselect";
+import { RootState } from "types";
 import { createWorkerSelector } from "../src/worker-functions";
-import { RootState } from "../src/types";
 
 function cacheByValue<T>(_: RootState, val: T) {
   return "" + val || "";

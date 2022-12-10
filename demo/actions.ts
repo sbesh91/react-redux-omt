@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import produce from "immer";
-import { CounterSliceState } from "../src/types";
+import { CounterSliceState } from "types";
 
 export let counterStoreState: CounterSliceState = {
   counter: 0,

@@ -1,18 +1,17 @@
 import { ToolkitStore } from "@reduxjs/toolkit/dist/configureStore";
 import {
-  BaseSelector,
+  SelectorReference,
   MessageType,
-  RootState,
   SelectorFunction,
   WorkerSelector,
 } from "./types";
 
 let selectors: Record<string, WorkerSelector<SelectorFunction>> | undefined;
 
-const listeners = new Map<string, BaseSelector>();
+const listeners = new Map<string, SelectorReference>();
 
-function initializeWorkerStore(
-  store: ToolkitStore<RootState>,
+function initializeWorkerStore<T>(
+  store: ToolkitStore<T>,
   s: Record<string, WorkerSelector<SelectorFunction>>
 ) {
   selectors = s;
@@ -36,7 +35,7 @@ function initializeWorkerStore(
     listeners.forEach(runSelector);
   });
 
-  function runSelector(value: BaseSelector, key: string) {
+  function runSelector(value: SelectorReference, key: string) {
     const selector: SelectorFunction<unknown> | undefined =
       selectors?.[value.selector]?.fn;
     const params = value.params ?? [];
