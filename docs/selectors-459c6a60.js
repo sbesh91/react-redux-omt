@@ -1,4 +1,4 @@
-define("./selectors-bc98b6c6.js",['exports'], (function (exports) { 'use strict';
+define(['exports'], (function (exports) { 'use strict';
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -1912,10 +1912,8 @@ define("./selectors-bc98b6c6.js",['exports'], (function (exports) { 'use strict'
 
 	var createCachedSelector = /*@__PURE__*/getDefaultExportFromCjs(dist.exports);
 
-	let selectors$1;
 	const listeners = new Map();
-	function initializeWorkerStore(store, s) {
-	  selectors$1 = s;
+	function initializeWorkerStore(store, selectors) {
 	  addEventListener("message", ({
 	    data
 	  }) => {
@@ -1936,7 +1934,7 @@ define("./selectors-bc98b6c6.js",['exports'], (function (exports) { 'use strict'
 	    listeners.forEach(runSelector);
 	  });
 	  function runSelector(value, key) {
-	    const selector = selectors$1?.[value.selector]?.fn;
+	    const selector = selectors?.[value.selector]?.fn;
 	    const params = value.params ?? [];
 	    if (selector) {
 	      const returnValue = selector(store.getState(), ...params);
@@ -1996,4 +1994,4 @@ define("./selectors-bc98b6c6.js",['exports'], (function (exports) { 'use strict'
 	exports.selectors = selectors;
 
 }));
-//# sourceMappingURL=selectors-bc98b6c6.js.map
+//# sourceMappingURL=selectors-459c6a60.js.map

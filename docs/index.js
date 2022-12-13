@@ -13,75 +13,61 @@
 
 // If the loader is already loaded, just stop.
 if (!self.define) {
-  const singleRequire = name => {
-    if (name !== 'require') {
-      name = name + '.js';
-    }
-    let promise = Promise.resolve();
-    if (!registry[name]) {
+  let registry = {};
+
+  // Used for `eval` and `importScripts` where we can't get script URL by other means.
+  // In both cases, it's safe to use a global var because those functions are synchronous.
+  let nextDefineUri;
+
+  const singleRequire = (uri, parentUri) => {
+    uri = new URL(uri + ".js", parentUri).href;
+    return registry[uri] || (
       
-        promise = new Promise(async resolve => {
+        new Promise(resolve => {
           if ("document" in self) {
             const script = document.createElement("script");
-            script.src = name;
-            document.head.appendChild(script);
+            script.src = uri;
             script.onload = resolve;
+            document.head.appendChild(script);
           } else {
-            importScripts(name);
+            nextDefineUri = uri;
+            importScripts(uri);
             resolve();
           }
-        });
+        })
       
-    }
-    return promise.then(() => {
-      if (!registry[name]) {
-        throw new Error(`Module ${name} didn’t register its module`);
-      }
-      return registry[name];
-    });
+      .then(() => {
+        let promise = registry[uri];
+        if (!promise) {
+          throw new Error(`Module ${uri} didn’t register its module`);
+        }
+        return promise;
+      })
+    );
   };
 
-  const require = (names, resolve) => {
-    Promise.all(names.map(singleRequire))
-      .then(modules => resolve(modules.length === 1 ? modules[0] : modules));
-  };
-  
-  const registry = {
-    require: Promise.resolve(require)
-  };
-
-  self.define = (moduleName, depsNames, factory) => {
-    if (registry[moduleName]) {
+  self.define = (depsNames, factory) => {
+    const uri = nextDefineUri || ("document" in self ? document.currentScript.src : "") || location.href;
+    if (registry[uri]) {
       // Module is already loading or loaded.
       return;
     }
-    registry[moduleName] = Promise.resolve().then(() => {
-      let exports = {};
-      const module = {
-        uri: location.origin + moduleName.slice(1)
-      };
-      return Promise.all(
-        depsNames.map(depName => {
-          switch(depName) {
-            case "exports":
-              return exports;
-            case "module":
-              return module;
-            default:
-              return singleRequire(depName);
-          }
-        })
-      ).then(deps => {
-        const facValue = factory(...deps);
-        if(!exports.default) {
-          exports.default = facValue;
-        }
-        return exports;
-      });
+    let exports = {};
+    const require = depUri => singleRequire(depUri, uri);
+    const specialDeps = {
+      module: { uri },
+      exports,
+      require
+    };
+    registry[uri] = Promise.all(depsNames.map(
+      depName => specialDeps[depName] || require(depName)
+    )).then(deps => {
+      factory(...deps);
+      return exports;
     });
   };
 }
-define("./index.js",['require', './selectors-bc98b6c6'], (function (require, selectors) { 'use strict';
+define(['module', 'require', './selectors-459c6a60'], (function (module, require, selectors) { 'use strict';
 
   var react = {exports: {}};
 
@@ -798,20 +784,20 @@ define("./index.js",['require', './selectors-bc98b6c6'], (function (require, sel
   }
 
   var _jsxFileName = "/home/steve/repos/react-redux-omt/demo/main.tsx";
-  const worker = new Worker("./store-d9a55011.js", {});
+  const worker = new Worker(new URL("store-d51c69c9.js", module.uri));
   initializeWorkerStoreListener(worker);
   function run() {
     reactDom.exports.render( /*#__PURE__*/React.createElement(CounterDemo, {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 16,
+        lineNumber: 18,
         columnNumber: 10
       }
     }), document.getElementById("root"));
   }
   const CounterDemo = () => {
     const one = useWorkerSelector(selectors.selectors.one);
-    const two = useWorkerSelector(selectors.selectors.two, ["hello"]);
+    const two = useWorkerSelector(selectors.selectors.two, ["hello"], "");
     const three = useWorkerSelector(selectors.selectors.three);
     const four = useWorkerSelector(selectors.selectors.four, [one.value ?? 0]);
     const five = useWorkerSelector(selectors.selectors.five, [2, 4, "world"], "initial rendered value");
@@ -824,57 +810,57 @@ define("./index.js",['require', './selectors-bc98b6c6'], (function (require, sel
     return /*#__PURE__*/React.createElement("div", {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 38,
+        lineNumber: 40,
         columnNumber: 5
       }
     }, /*#__PURE__*/React.createElement("h1", {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 39,
+        lineNumber: 41,
         columnNumber: 7
       }
     }, "Welcome"), /*#__PURE__*/React.createElement("p", {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 40,
+        lineNumber: 42,
         columnNumber: 7
       }
     }, "The current counter is: ", one.value), /*#__PURE__*/React.createElement("p", {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 41,
+        lineNumber: 43,
         columnNumber: 7
       }
     }, "A modification of that value is: ", two), /*#__PURE__*/React.createElement("p", {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 42,
+        lineNumber: 44,
         columnNumber: 7
       }
     }, "What about a different modification: ", three), /*#__PURE__*/React.createElement("p", {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 43,
+        lineNumber: 45,
         columnNumber: 7
       }
     }, "Here's yet another different modification: ", four), /*#__PURE__*/React.createElement("p", {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 44,
+        lineNumber: 46,
         columnNumber: 7
       }
     }, five), /*#__PURE__*/React.createElement("button", {
       onClick: () => dispatch(selectors.increment(2)),
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 45,
+        lineNumber: 47,
         columnNumber: 7
       }
     }, "+"), /*#__PURE__*/React.createElement("button", {
       onClick: () => dispatch(selectors.decrement(2)),
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 46,
+        lineNumber: 48,
         columnNumber: 7
       }
     }, "-"));

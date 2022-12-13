@@ -7,12 +7,13 @@
   "main": "out/index.js",
   "types": "out/types.d.ts",
   "scripts": {
-    "clean": "rm -rf out && rm -rf dist",
+    "clean": "rm -rf out && rm -rf docs",
     "build": "npm run clean && microbundle",
     "test": "ts-mocha --exit",
     "deploy": "np",
     "watch-demo": "rollup -c -w -m",
-    "serve": "statikk --port 8080 --coi dist"
+    "demo":"rollup -c -m",
+    "serve": "statikk --port 8080 --coi docs"
   },
   "keywords": [
     "react-redux",

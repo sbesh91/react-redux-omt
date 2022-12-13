@@ -12,7 +12,7 @@ const extensions = [".js", ".jsx", ".ts", ".tsx"];
 export default {
   input: "demo/index.html",
   output: {
-    dir: "dist",
+    dir: "docs",
     format: "amd",
   },
   context: "globalThis",
