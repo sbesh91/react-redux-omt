@@ -7,7 +7,7 @@
   "main": "out/index.js",
   "types": "out/types.d.ts",
   "scripts": {
-    "clean": "rm -rf out",
+    "clean": "rm -rf out && rm -rf dist",
     "build": "npm run clean && microbundle",
     "test": "ts-mocha --exit",
     "deploy": "np",
