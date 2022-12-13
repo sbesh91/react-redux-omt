@@ -1,6 +1,6 @@
 {
   "name": "react-redux-omt",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Tools for running actions, selectors, and redux off the main thread.",
   "type": "module",
   "source": "src/index.ts",
