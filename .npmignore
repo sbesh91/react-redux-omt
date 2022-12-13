@@ -1,4 +1,5 @@
 demo
+dist
 rollup.config.js
 babel.config.json
 tsconfig.json
