@@ -2,6 +2,12 @@
 
 `react-redux` is a great library for state management. At a certain point, you may want to store an awful lot of data in redux. This can lead to storing lots of memory on the main thread. With this in mind, I constructed a few functions that will help you move your redux store off the main thread and into a worker
 
+## Install
+
+```
+npm i react-redux-omt
+```
+
 ## Typical Redux configuration
 
 ```typescript
