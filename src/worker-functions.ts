@@ -34,7 +34,7 @@ function initializeWorkerStore<T>(
   function runSelector(value: SelectorReference, key: string) {
     const selector: SelectorFunction<T> | undefined =
       selectors?.[value.selector]?.fn;
-    const params = value.params ?? [];
+    const params = value.params;
 
     if (selector) {
       const returnValue = selector(store.getState(), ...params);

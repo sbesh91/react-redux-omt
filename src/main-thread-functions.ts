@@ -28,39 +28,35 @@ function dispatch(action: Action) {
 
 function useWorkerSelector<
   Fn extends SelectorFunction<Parameters<Fn>[0], ReturnType<Fn>>,
-  Return extends ReturnType<Fn>
->(
-  selector: WorkerSelector<Fn>,
-  params: FunctionParameters<Fn>,
-  defaultValue: Return
-): Signal<Return>;
+  Params extends FunctionParameters<Fn>,
+  Return extends ReturnType<Fn>,
+  RequiredParams extends [Params[0]] extends [undefined]
+    ? {}
+    : { params: Params },
+  Options extends { defaultValue?: Return } & RequiredParams
+>(selector: WorkerSelector<Fn>, options: Options): Signal<Return>;
 
 function useWorkerSelector<
   Fn extends SelectorFunction<Parameters<Fn>[0], ReturnType<Fn>>,
-  Return extends ReturnType<Fn>
->(
-  selector: WorkerSelector<Fn>,
-  params: FunctionParameters<Fn>,
-  defaultValue?: Return
-): Signal<Return | undefined>;
+  Params extends FunctionParameters<Fn>,
+  Return extends ReturnType<Fn>,
+  RequiredParams extends [Params[0]] extends [undefined]
+    ? {}
+    : { params: Params },
+  Options extends { defaultValue?: Return } & RequiredParams
+>(selector: WorkerSelector<Fn>, options?: Options): Signal<Return | undefined>;
 
 function useWorkerSelector<
   Fn extends SelectorFunction<Parameters<Fn>[0], ReturnType<Fn>>,
-  Return extends ReturnType<Fn>
->(
-  selector: WorkerSelector<Fn>,
-  params?: FunctionParameters<Fn>,
-  defaultValue?: Return
-): Signal<Return | undefined>;
-
-function useWorkerSelector<
-  Fn extends SelectorFunction<Parameters<Fn>[0], ReturnType<Fn>>,
-  Return extends ReturnType<Fn>
->(
-  selector: WorkerSelector<Fn>,
-  params?: FunctionParameters<Fn>,
-  defaultValue?: Return
-): Signal<Return | undefined> {
+  Return extends ReturnType<Fn>,
+  Params extends FunctionParameters<Fn>,
+  RequiredParams extends [Params[0]] extends [undefined]
+    ? {}
+    : { params: Params },
+  Options extends { defaultValue?: Return } & RequiredParams
+>(selector: WorkerSelector<Fn>, options?: Options): Signal<Return | undefined> {
+  const defaultValue = options?.defaultValue;
+  const params = options && "params" in options ? options.params : [];
   const currentUuid = useSignal("");
   const state = useSignal(defaultValue);
 

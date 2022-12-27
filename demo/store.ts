@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import { RootState } from "./types";
-import { initializeWorkerStore } from "../src/worker-functions";
+import { initializeWorkerStore } from "../src";
 import { counterSliceReducer, counterStoreState } from "./actions";
 import { selectors } from "./selectors";
 

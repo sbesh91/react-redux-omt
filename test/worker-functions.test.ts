@@ -1,4 +1,4 @@
-import { createWorkerSelector } from "../src/worker-functions";
+import { createWorkerSelector } from "../src";
 import * as assert from "assert";
 import "mocha";
 

@@ -125,14 +125,20 @@ Two of our functions are used here.
 ```typescript
 const CounterDemo = () => {
   const one = useWorkerSelector(selectors.one);
-  const two = useWorkerSelector(selectors.two, ["hello"], "");
-  const three = useWorkerSelector(selectors.three);
-  const four = useWorkerSelector(selectors.four, [one.value ?? 0]);
-  const five = useWorkerSelector(
-    selectors.five,
-    [2, 4, "world"],
-    "initial rendered value"
-  );
+  const two = useWorkerSelector(selectors.two, {
+    params: ["hello"],
+    defaultValue: "",
+  });
+  const three = useWorkerSelector(selectors.three, {
+    params: [1],
+  });
+  const four = useWorkerSelector(selectors.four, {
+    params: [one.value ?? 0],
+  });
+  const five = useWorkerSelector(selectors.five, {
+    params: [2, 4, "world"],
+    defaultValue: "initial rendered value",
+  });
 
   return (
     <div>
