@@ -67,7 +67,7 @@ if (!self.define) {
     });
   };
 }
-define(['./selectors-459c6a60'], (function (selectors) { 'use strict';
+define(['./selectors-0165158a'], (function (selectors) { 'use strict';
 
   const rootReducer = selectors.combineReducers({
     counterSliceReducer: selectors.counterSliceReducer
@@ -82,4 +82,4 @@ define(['./selectors-459c6a60'], (function (selectors) { 'use strict';
   selectors.initializeWorkerStore(store, selectors.selectors);
 
 }));
-//# sourceMappingURL=store-d51c69c9.js.map
+//# sourceMappingURL=store-6c69f58d.js.map

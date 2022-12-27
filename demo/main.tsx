@@ -25,7 +25,7 @@ const CounterDemo = () => {
     defaultValue: "",
   });
   const three = useWorkerSelector(selectors.three, {
-    params: [1]
+    params: [1],
   });
   const four = useWorkerSelector(selectors.four, {
     params: [one.value ?? 0],

@@ -1,30 +1,24 @@
-import { Action, CombinedState } from "@reduxjs/toolkit";
+import { Action } from "@reduxjs/toolkit";
 export type MessageType = {
     type: "dispatch";
     action: Action;
 } | {
     type: "subscribe";
-    selector: BaseSelector;
+    selector: SelectorReference;
     uuid: string;
 } | {
     type: "unsubscribe";
     uuid: string;
 };
-export type BaseSelector = {
+export type SelectorReference = {
     selector: string;
     params: ReadonlyArray<unknown>;
 };
-export type RootState = CombinedState<{
-    counterSliceReducer: CounterSliceState;
-}>;
 export type SelectorReturn<T> = {
     uuid: string;
     value: T;
 };
-export interface CounterSliceState {
-    counter: number;
-}
-export type SelectorFunction<T = unknown> = (state: RootState, ...params: any[]) => T;
+export type SelectorFunction<T = unknown, K = unknown> = (state: T, ...params: any[]) => K;
 export interface WorkerSelector<T> {
     name: string;
     fn: T;

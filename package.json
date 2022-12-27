@@ -8,11 +8,11 @@
   "types": "out/types.d.ts",
   "scripts": {
     "clean": "rm -rf out && rm -rf docs",
-    "build": "npm run clean && microbundle",
+    "build": "npm run clean && microbundle && npm run demo",
     "test": "ts-mocha --exit",
     "deploy": "np",
     "watch-demo": "rollup -c -w -m",
-    "demo":"rollup -c -m",
+    "demo": "rollup -c -m",
     "serve": "statikk --port 8080 --coi docs"
   },
   "keywords": [

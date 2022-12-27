@@ -8,6 +8,10 @@
 npm i react-redux-omt
 ```
 
+## Demo
+
+[react-redux-omt](https://sbesh91.github.io/react-redux-omt/)
+
 ## Typical Redux configuration
 
 ```typescript
