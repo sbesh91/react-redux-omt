@@ -3,9 +3,9 @@
   "version": "0.1.1",
   "description": "Tools for running actions, selectors, and redux off the main thread.",
   "type": "module",
-  "source": "src/index.ts",
-  "main": "out/index.js",
-  "types": "out/types.d.ts",
+  "source": "./src/index.ts",
+  "main": "./out/index.js",
+  "types": "./out/index.d.ts",
   "scripts": {
     "clean": "rm -rf out && rm -rf docs",
     "build": "npm run clean && microbundle && npm run demo",
