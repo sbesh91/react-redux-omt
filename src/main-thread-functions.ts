@@ -33,7 +33,7 @@ function useWorkerSelector<
   RequiredParams extends [Params[0]] extends [undefined]
     ? {}
     : { params: Params },
-  Options extends { defaultValue?: Return } & RequiredParams
+  Options extends { defaultValue: Return } & RequiredParams,
 >(selector: WorkerSelector<Fn>, options: Options): Signal<Return>;
 
 function useWorkerSelector<
