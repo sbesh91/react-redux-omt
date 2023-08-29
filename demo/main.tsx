@@ -46,10 +46,10 @@ const CounterDemo = () => {
     <div>
       <h1>Welcome</h1>
       <p>The current counter is: {one.value}</p>
-      <p>A modification of that value is: {two}</p>
-      <p>What about a different modification: {three}</p>
-      <p>Here's yet another different modification: {four}</p>
-      <p>{five}</p>
+      <p>A modification of that value is: {two.value}</p>
+      <p>What about a different modification: {three.value}</p>
+      <p>Here's yet another different modification: {four.value}</p>
+      <p>{five.value}</p>
       <button onClick={() => dispatch(increment(2))}>+</button>
       <button onClick={() => dispatch(decrement(2))}>-</button>
     </div>
