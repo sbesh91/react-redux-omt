@@ -67,7 +67,7 @@ if (!self.define) {
     });
   };
 }
-define(['module', 'require', './selectors-5348b7c3'], (function (module, require, selectors) { 'use strict';
+define(['module', 'require', './selectors-d25cc1ab'], (function (module, require, selectors) { 'use strict';
 
   var reactDomExports = {};
   var reactDom = {
@@ -486,7 +486,7 @@ define(['module', 'require', './selectors-5348b7c3'], (function (module, require
   } (reactDom));
 
   var _jsxFileName = "/Users/stevenbeshensky/Documents/repos/react-redux-omt/demo/main.tsx";
-  const worker = new Worker(new URL("store-57001cb7.js", module.uri));
+  const worker = new Worker(new URL("store-214b901a.js", module.uri));
   selectors.initializeWorkerStoreListener(worker);
   function run() {
     reactDomExports.render( /*#__PURE__*/selectors.React.createElement(CounterDemo, {
@@ -513,6 +513,10 @@ define(['module', 'require', './selectors-5348b7c3'], (function (module, require
       params: [2, 4, "world"],
       defaultValue: "initial rendered value"
     });
+    const test = selectors.useWorkerSelector(selectors.selectors.test, {
+      params: [1, 2]
+    });
+    console.log(test.value);
     selectors.reactExports.useEffect(() => {
       // const interval = setInterval(() => {
       //   dispatch(increment(2));
@@ -522,57 +526,63 @@ define(['module', 'require', './selectors-5348b7c3'], (function (module, require
     return /*#__PURE__*/selectors.React.createElement("div", {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 46,
+        lineNumber: 51,
         columnNumber: 5
       }
     }, /*#__PURE__*/selectors.React.createElement("h1", {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 47,
+        lineNumber: 52,
         columnNumber: 7
       }
     }, "Welcome"), /*#__PURE__*/selectors.React.createElement("p", {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 48,
+        lineNumber: 53,
         columnNumber: 7
       }
     }, "The current counter is: ", one.value), /*#__PURE__*/selectors.React.createElement("p", {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 49,
+        lineNumber: 54,
         columnNumber: 7
       }
-    }, "A modification of that value is: ", two), /*#__PURE__*/selectors.React.createElement("p", {
+    }, "A modification of that value is: ", two.value), /*#__PURE__*/selectors.React.createElement("p", {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 50,
+        lineNumber: 55,
         columnNumber: 7
       }
-    }, "What about a different modification: ", three), /*#__PURE__*/selectors.React.createElement("p", {
+    }, "What about a different modification: ", three.value), /*#__PURE__*/selectors.React.createElement("p", {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 51,
+        lineNumber: 56,
         columnNumber: 7
       }
-    }, "Here's yet another different modification: ", four), /*#__PURE__*/selectors.React.createElement("p", {
+    }, "Here's yet another different modification: ", four.value), /*#__PURE__*/selectors.React.createElement("p", {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 52,
+        lineNumber: 57,
         columnNumber: 7
       }
-    }, five), /*#__PURE__*/selectors.React.createElement("button", {
+    }, five.value), /*#__PURE__*/selectors.React.createElement("p", {
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 58,
+        columnNumber: 7
+      }
+    }, "Deeply nested and parameterized ", test.value), /*#__PURE__*/selectors.React.createElement("button", {
       onClick: () => selectors.dispatch(selectors.increment(2)),
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 53,
+        lineNumber: 59,
         columnNumber: 7
       }
     }, "+"), /*#__PURE__*/selectors.React.createElement("button", {
       onClick: () => selectors.dispatch(selectors.decrement(2)),
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 54,
+        lineNumber: 60,
         columnNumber: 7
       }
     }, "-"));
